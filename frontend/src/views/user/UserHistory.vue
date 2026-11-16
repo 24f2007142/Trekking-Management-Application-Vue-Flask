@@ -5,6 +5,26 @@ const history = ref([])
 const loading = ref(false)
 const error = ref('')
 
+const exporting = ref(false)
+const exportMessage = ref('')
+const exportError = ref('')
+
+function getCsrfToken() {
+    const cookies = document.cookie.split('; ')
+
+    for (const cookie of cookies) {
+        const parts = cookie.split('=')
+
+        if (parts[0] === 'csrf_access_token') {
+            return decodeURIComponent(parts[1])
+        }
+    }
+
+    return ''
+}
+
+
+
 async function loadHistory() {
     loading.value = true
     error.value = ''
@@ -30,6 +50,42 @@ async function loadHistory() {
     }
 }
 
+async function exportHistory() {
+    if (exporting.value) return
+
+    exporting.value = true
+    exportMessage.value = ''
+    exportError.value = ''
+
+    try {
+        const response = await fetch(
+            'http://127.0.0.1:5000/api/user/history/export',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRF-TOKEN': getCsrfToken(),
+                },
+            }
+        )
+
+        const result = await response.json()
+
+        if (!response.ok) {
+            throw new Error(
+                result.message || result.msg || 'Could not request export'
+            )
+        }
+
+        exportMessage.value = result.message
+    } catch (err) {
+        exportError.value = err.message
+    } finally {
+        exporting.value = false
+    }
+}
+
+
 onMounted(loadHistory)
 </script>
 
@@ -37,6 +93,20 @@ onMounted(loadHistory)
     <section class="history-page">
         <h1>Trekking History</h1>
         <p>View your completed treks and cancelled bookings.</p>
+
+        <button type="button" :disabled="exporting" @click="exportHistory">
+
+            {{ exporting ? 'Requesting export...' : 'Export history as CSV' }}
+
+        </button>
+
+        <p v-if="exportMessage" role="status">
+            {{ exportMessage }}
+        </p>
+
+        <p v-if="exportError" role="alert" class="error">
+            {{ exportError }}
+        </p>
 
         <p v-if="loading" role="status">Loading trekking history...</p>
 

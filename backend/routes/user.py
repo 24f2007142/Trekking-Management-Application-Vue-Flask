@@ -410,3 +410,24 @@ def update_user_profile():
             'email': user.email
         }
     }), 200
+
+
+from tasks import export_trekking_history
+from kombu.exceptions import OperationalError
+
+@user_bp.route('/history/export', methods=['POST'])
+@user_required
+def request_history_export():
+    user_id = int(get_jwt_identity())
+
+    try:
+        task = export_trekking_history.delay(user_id)
+    except OperationalError:
+        return jsonify({
+            'message': 'Export service is unavailable. Please try again later.'
+        }), 503
+
+    return jsonify({
+        'message': 'Export requested. You will receive an email when it is ready.',
+        'task_id': task.id,
+    }), 202

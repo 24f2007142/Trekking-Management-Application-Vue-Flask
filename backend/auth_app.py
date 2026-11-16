@@ -1,4 +1,4 @@
-"""Application entry point for authentication and all three roles (Milestones 2–5)."""
+"""Application entry point for authentication and all three roles (Milestones 2–7)."""
 import os
 import secrets
 from datetime import timedelta
@@ -24,6 +24,10 @@ app.config.update(
     JWT_COOKIE_CSRF_PROTECT=True,
 )
 db.init_app(app)
+
+from celery_setup import init_celery
+celery = init_celery(app)
+
 JWTManager(app)
 CORS(app, resources={r'/api/*': {'origins': [
     'http://127.0.0.1:5173', 'http://localhost:5173',

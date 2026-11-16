@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>Monthly Trekking Report</h1>
+    <p>{{ report.month }}</p>
+
+    <p>Treks conducted: {{ report.total_treks }}</p>
+    <p>Participant places: {{ report.total_participants }}</p>
+
+    <h2>Top 5 Treks by Participation</h2>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Trek</th>
+                <th>Participants</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trek in report.popular_treks %}
+            <tr>
+                <td>{{ trek.name }}</td>
+                <td>{{ trek.participants }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="2">No completed treks this month.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>
+        Participant places count confirmed booked slots.
+        A person attending multiple treks is counted for each trek.
+    </p>
+</body>
+</html>
