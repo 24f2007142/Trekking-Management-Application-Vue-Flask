@@ -420,6 +420,9 @@ def edit_trek(trek_id):
         }), 404
 
 
+    if trek.trek_status in ('completed', 'cancelled'):
+        return jsonify({'message': 'Completed and cancelled trek details are read-only'}), 409
+
     data = request.get_json(silent=True)
 
     if not isinstance(data, dict):
@@ -564,12 +567,13 @@ def delete_trek(trek_id):
             'message': 'Trek not found'
         }), 404
 
+    if trek.trek_status == 'completed':
+        return jsonify({'message': 'Completed treks must be kept for history'}), 409
+
     existing_booking = Booking.query.filter_by(trek_id=trek_id).first()
 
     if existing_booking:
 
-        if trek.trek_status == 'completed':
-            return jsonify({'message': 'Completed treks must be kept for history'}), 409
         trek.trek_status = 'cancelled'
         trek.bookings_open = False
         for booking in trek.booking:

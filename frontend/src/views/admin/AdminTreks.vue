@@ -644,11 +644,11 @@ onMounted(fetchTreks)
                                     More Details
                                 </button>
 
-                                <button type="button" class="trek-button" @click="editTrek(trek.id)">
+                                <button type="button" class="trek-button" :disabled="['completed', 'cancelled'].includes(trek.trek_status)" @click="editTrek(trek.id)">
                                     Edit
                                 </button>
 
-                                <button type="button" class="trek-button" @click="deleteTrek(trek.id)">
+                                <button type="button" class="trek-button" :disabled="trek.trek_status === 'completed'" @click="deleteTrek(trek.id)">
                                     Delete
                                 </button>
                                 <button

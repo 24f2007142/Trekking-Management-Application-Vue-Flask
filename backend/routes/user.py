@@ -303,6 +303,7 @@ def get_user_bookings():
             'location': trek.location,
             'start_date': trek.start_date.isoformat(),
             'end_date': trek.end_date.isoformat(),
+            'bookings_open': trek.bookings_open,
             'trek_status': trek.trek_status
         })
 
@@ -314,13 +315,13 @@ def get_user_bookings():
 def get_trekking_history():
     user_id = int(get_jwt_identity())
     bookings = Booking.query.filter(
-        Booking.user_id == user_id, Booking.status.in_(('confirmed', 'completed'))
+        Booking.user_id == user_id
     ).order_by(Booking.id.desc()).all()
     history = []
 
     for booking in bookings:
         trek = booking.trek
-        if trek.trek_status != 'completed':
+        if booking.status != 'cancelled' and trek.trek_status != 'completed':
             continue
 
         history.append({
@@ -336,6 +337,7 @@ def get_trekking_history():
             'duration': trek.duration,
             'start_date': trek.start_date.isoformat(),
             'end_date': trek.end_date.isoformat(),
+            'bookings_open': trek.bookings_open,
             'trek_status': trek.trek_status
         })
 

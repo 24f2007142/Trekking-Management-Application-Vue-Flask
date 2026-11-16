@@ -36,7 +36,7 @@ onMounted(loadHistory)
 <template>
     <section class="history-page">
         <h1>Trekking History</h1>
-        <p>View your completed trek bookings.</p>
+        <p>View your completed treks and cancelled bookings.</p>
 
         <p v-if="loading" role="status">Loading trekking history...</p>
 
@@ -50,6 +50,7 @@ onMounted(loadHistory)
                 <thead>
                     <tr>
                         <th scope="col">Booking ID</th>
+                        <th scope="col">Booked On</th>
                         <th scope="col">Trek</th>
                         <th scope="col">Location</th>
                         <th scope="col">Difficulty</th>
@@ -63,6 +64,7 @@ onMounted(loadHistory)
                 <tbody>
                     <tr v-for="trek in history" :key="trek.booking_id">
                         <td>{{ trek.booking_id }}</td>
+                        <td>{{ trek.booking_date }}</td>
                         <td>{{ trek.trek_name }}</td>
                         <td>{{ trek.location }}</td>
                         <td>{{ trek.difficulty }}</td>
@@ -70,10 +72,10 @@ onMounted(loadHistory)
                         <td>{{ trek.start_date }}</td>
                         <td>{{ trek.end_date }}</td>
                         <td>{{ trek.slots_booked }}</td>
-                        <td>{{ trek.booking_status }}</td><td>{{ trek.payment_status }}</td><td>{{ trek.trek_status }}</td>
+                        <td>{{ trek.booking_status === 'confirmed' ? 'Booked' : trek.booking_status }}</td><td>{{ trek.payment_status }}</td><td>{{ trek.trek_status === 'upcoming' ? (trek.bookings_open ? 'Open' : 'Closed') : trek.trek_status }}</td>
                     </tr>
                     <tr v-if="history.length === 0 && !error">
-                        <td colspan="11">You have no completed treks yet.</td>
+                        <td colspan="12">You have no completed treks or cancelled bookings yet.</td>
                     </tr>
                 </tbody>
             </table>

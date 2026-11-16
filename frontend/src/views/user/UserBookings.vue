@@ -131,9 +131,9 @@ onMounted(loadBookings)
                         <td>{{ booking.start_date }}</td>
                         <td>{{ booking.end_date }}</td>
                         <td>{{ booking.slots_booked }}</td>
-                        <td>{{ booking.booking_status }}</td>
+                        <td>{{ booking.booking_status === 'confirmed' ? 'Booked' : booking.booking_status }}</td>
                         <td>{{ booking.payment_status }}</td>
-                        <td>{{ booking.trek_status }}</td>
+                        <td>{{ booking.trek_status === 'upcoming' ? (booking.bookings_open ? 'Open' : 'Closed') : booking.trek_status }}</td>
                         <td>
                             <button v-if="booking.trek_status === 'upcoming' && booking.booking_status !== 'cancelled'"
                                 type="button" class="cancel-button" :disabled="saving"
