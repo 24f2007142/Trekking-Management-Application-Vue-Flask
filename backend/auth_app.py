@@ -1,4 +1,4 @@
-"""Authentication and Admin management entry point (Milestones 2 and 3)."""
+"""Authentication, Admin and Staff entry point (Milestones 2–4)."""
 import os
 import secrets
 from datetime import timedelta
@@ -201,10 +201,8 @@ from routes.admin import admin_bp
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
 
-@app.get('/api/staff/dashboard')
-@role_required('staff')
-def staff_dashboard():
-    return jsonify(message='Welcome to the Trek Staff dashboard')
+from routes.staff import staff_bp
+app.register_blueprint(staff_bp, url_prefix='/api/staff')
 
 
 @app.get('/api/user/dashboard')

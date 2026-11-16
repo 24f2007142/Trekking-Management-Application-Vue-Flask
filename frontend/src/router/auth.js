@@ -12,6 +12,12 @@ import AdminBookings from '../views/admin/AdminBookings.vue'
 import AdminReports from '../views/admin/AdminReports.vue'
 import AdminSettings from '../views/admin/AdminSettings.vue'
 
+import StaffLayout from '../layouts/StaffLayout.vue'
+import StaffDashboard from '../views/staff/StaffDashboard.vue'
+import ManageTreks from '../views/staff/ManageTreks.vue'
+import ManageParticipants from '../views/staff/ManageParticipants.vue'
+import StaffSettings from '../views/staff/StaffSettings.vue'
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -31,7 +37,17 @@ const router = createRouter({
         { path: 'settings', component: AdminSettings },
       ],
     },
-    ...['staff', 'user'].map(role => ({
+    {
+      path: '/staff', component: StaffLayout, meta: { role: 'staff' },
+      children: [
+        { path: '', redirect: '/staff/dashboard' },
+        { path: 'dashboard', component: StaffDashboard },
+        { path: 'treks', component: ManageTreks },
+        { path: 'participants', component: ManageParticipants },
+        { path: 'profile', component: StaffSettings },
+      ],
+    },
+    ...['user'].map(role => ({
       path: `/${role}/dashboard`, component: AuthDashboard,
       props: { role }, meta: { role },
     })),
