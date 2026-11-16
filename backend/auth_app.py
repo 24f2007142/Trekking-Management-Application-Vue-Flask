@@ -1,4 +1,4 @@
-"""Milestone 2 entry point: authentication without later milestone services."""
+"""Authentication and Admin management entry point (Milestones 2 and 3)."""
 import os
 import secrets
 from datetime import timedelta
@@ -196,11 +196,9 @@ def register():
         }), 400
 
 
-# These small dashboards verify role access. Management screens come later.
-@app.get('/api/admin/dashboard')
-@role_required('admin')
-def admin_dashboard():
-    return jsonify(message='Welcome to the Admin dashboard')
+# Full Admin management replaces the Milestone 2 Admin placeholders.
+from routes.admin import admin_bp
+app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
 
 @app.get('/api/staff/dashboard')
@@ -213,32 +211,6 @@ def staff_dashboard():
 @role_required('user')
 def user_dashboard():
     return jsonify(message='Welcome to the Trekker dashboard')
-
-
-@app.post('/api/admin/staffs')
-@role_required('admin')
-def create_staff():
-    data = request.get_json(silent=True)
-    fields = ('username', 'email', 'password', 'contact_number')
-    if not isinstance(data, dict) or any(
-        not isinstance(data.get(field), str) or not data[field].strip()
-        for field in fields
-    ):
-        return jsonify(message='All staff fields are required'), 400
-    email = data['email'].strip().lower()
-    if (email.count('@') != 1 or len(email) > 100
-            or len(data['username'].strip()) > 100
-            or len(data['contact_number'].strip()) > 15):
-        return jsonify(message='Invalid staff details'), 400
-    if User.query.filter_by(email=email).first():
-        return jsonify(message='Email already exists'), 409
-    staff = User(username=data['username'].strip(), email=email,
-                 password=generate_password_hash(data['password']),
-                 role='staff', approval_status='approved')
-    staff.staff_profile = Staff(contact_number=data['contact_number'].strip())
-    db.session.add(staff)
-    db.session.commit()
-    return jsonify(message='Staff account created'), 201
 
 
 if __name__ == '__main__':
