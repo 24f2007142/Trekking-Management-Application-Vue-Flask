@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import LoginView from '../components/LoginView.vue'
 import RegisterView from '../components/RegisterView.vue'
-import AuthDashboard from '../components/AuthDashboard.vue'
 
 import AdminLayout from '../layouts/AdminLayout.vue'
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
@@ -17,6 +16,13 @@ import StaffDashboard from '../views/staff/StaffDashboard.vue'
 import ManageTreks from '../views/staff/ManageTreks.vue'
 import ManageParticipants from '../views/staff/ManageParticipants.vue'
 import StaffSettings from '../views/staff/StaffSettings.vue'
+
+import UserLayout from '../layouts/UserLayout.vue'
+import UserDashboard from '../views/user/UserDashboard.vue'
+import UserTreks from '../views/user/UserTreks.vue'
+import UserBookings from '../views/user/UserBookings.vue'
+import UserHistory from '../views/user/UserHistory.vue'
+import UserSettings from '../views/user/UserSettings.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -47,10 +53,17 @@ const router = createRouter({
         { path: 'profile', component: StaffSettings },
       ],
     },
-    ...['user'].map(role => ({
-      path: `/${role}/dashboard`, component: AuthDashboard,
-      props: { role }, meta: { role },
-    })),
+    {
+      path: '/user', component: UserLayout, meta: { role: 'user' },
+      children: [
+        { path: '', redirect: '/user/dashboard' },
+        { path: 'dashboard', component: UserDashboard },
+        { path: 'treks', component: UserTreks },
+        { path: 'bookings', component: UserBookings },
+        { path: 'history', component: UserHistory },
+        { path: 'profile', component: UserSettings },
+      ],
+    },
   ],
 })
 

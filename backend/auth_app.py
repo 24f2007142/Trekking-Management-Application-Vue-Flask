@@ -1,4 +1,4 @@
-"""Authentication, Admin and Staff entry point (Milestones 2–4)."""
+"""Application entry point for authentication and all three roles (Milestones 2–5)."""
 import os
 import secrets
 from datetime import timedelta
@@ -205,10 +205,8 @@ from routes.staff import staff_bp
 app.register_blueprint(staff_bp, url_prefix='/api/staff')
 
 
-@app.get('/api/user/dashboard')
-@role_required('user')
-def user_dashboard():
-    return jsonify(message='Welcome to the Trekker dashboard')
+from routes.user import user_bp
+app.register_blueprint(user_bp, url_prefix='/api/user')
 
 
 if __name__ == '__main__':
