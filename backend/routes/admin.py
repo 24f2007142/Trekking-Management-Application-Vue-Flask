@@ -8,6 +8,7 @@ from sqlalchemy import or_, func
 import re
 
 from db import db
+from cache import get_cached_data, cache_data, clear_trek_cache
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -165,6 +166,7 @@ def update_user_status(user_id):
                 booking.payment_status = 'refund finished'
 
         db.session.commit()
+        clear_trek_cache()
 
     except SQLAlchemyError:
 
@@ -264,6 +266,10 @@ def admin_dashboard():
 def get_treks():
 
     search = request.args.get('search', '').strip().lower()
+    cache_key = f'admin:listing:{search}'
+    cached_data = get_cached_data(cache_key)
+    if cached_data is not None:
+        return jsonify(cached_data), 200
 
     treks = Trek.query.all()
 
@@ -290,6 +296,7 @@ def get_treks():
         })
 
     data = {'data': treks_to_display}
+    cache_data(cache_key, data)
     return jsonify(data), 200
 
 
@@ -400,6 +407,7 @@ def create_trek():
 
     db.session.add(trek)
     db.session.commit()
+    clear_trek_cache()
 
     return jsonify({
         'message': 'Trek added successfully',
@@ -543,6 +551,7 @@ def edit_trek(trek_id):
 
     try:
         db.session.commit()
+        clear_trek_cache()
 
     except Exception:
         db.session.rollback()
@@ -585,6 +594,7 @@ def delete_trek(trek_id):
             assignment.status = 'cancelled'
 
         db.session.commit()
+        clear_trek_cache()
 
         return jsonify({
             'message': 'Trek has existing bookings and was cancelled instead of deleted'
@@ -592,6 +602,7 @@ def delete_trek(trek_id):
 
     db.session.delete(trek)
     db.session.commit()
+    clear_trek_cache()
 
     return jsonify({
         'message': 'Trek deleted successfully'
@@ -1160,6 +1171,7 @@ def approve_trek(trek_id):
     trek.trek_status = 'approved'
     trek.bookings_open = False
     db.session.commit()
+    clear_trek_cache()
     return jsonify({'message': 'Trek approved. Bookings can now be opened.'}), 200
 
 

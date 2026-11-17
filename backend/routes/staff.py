@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.exc import SQLAlchemyError
 from db import db
+from cache import clear_trek_cache
 from models import User, Staff, Trek, Booking, StaffTrek
 
 from functools import wraps
@@ -205,6 +206,7 @@ def update_trek_slots(trek_id):
     try:
         trek.total_slots = total_slots
         db.session.commit()
+        clear_trek_cache()
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'message': 'Failed to update trek slots'}), 500
@@ -257,6 +259,7 @@ def update_bookings_status(trek_id):
         if bookings_open:
             trek.trek_status = 'upcoming'
         db.session.commit()
+        clear_trek_cache()
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'message': 'Failed to update booking status'}), 500
@@ -335,6 +338,7 @@ def update_trek_status(trek_id):
             staff_assignment.status = status if status in ('completed', 'cancelled') else 'assigned'
 
         db.session.commit()
+        clear_trek_cache()
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'message': 'Failed to update trek status'}), 500
@@ -438,6 +442,7 @@ def update_participant(trek_id, booking_id):
             Trek.booked_slots: Trek.booked_slots - booking.slots_booked
         }, synchronize_session=False)
         db.session.commit()
+        clear_trek_cache()
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'message': 'Could not remove participant'}), 500

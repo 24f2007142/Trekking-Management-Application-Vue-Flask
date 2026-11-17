@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from db import db
+from cache import get_cached_data, cache_data, clear_trek_cache
 from models import User, Booking, Trek
 
 
@@ -108,6 +109,10 @@ def user_dashboard():
 @user_required
 def get_available_treks():
     user_id = int(get_jwt_identity())
+    cache_key = f'user:{user_id}:listing'
+    cached_data = get_cached_data(cache_key)
+    if cached_data is not None:
+        return jsonify(cached_data), 200
 
     bookings = Booking.query.filter(
         Booking.user_id == user_id, Booking.status != 'cancelled'
@@ -147,12 +152,17 @@ def get_available_treks():
         })
 
     data = {'data': {'upcoming_treks': upcoming_treks}}
+    cache_data(cache_key, data)
     return jsonify(data), 200
 
 
 @user_bp.route('/treks/<int:trek_id>', methods=['GET'])
 @user_required
 def get_trek_details(trek_id):
+    cache_key = f'detail:{trek_id}'
+    cached_data = get_cached_data(cache_key)
+    if cached_data is not None:
+        return jsonify(cached_data), 200
 
     trek = Trek.query.get(trek_id)
 
@@ -176,6 +186,7 @@ def get_trek_details(trek_id):
         'bookings_open': trek.bookings_open,
         'trek_status': trek.trek_status
     }}
+    cache_data(cache_key, data)
     return jsonify(data), 200
 
 
@@ -237,6 +248,7 @@ def book_trek(trek_id):
         )
         db.session.add(book)
         db.session.commit()
+        clear_trek_cache()
 
     except SQLAlchemyError:
         db.session.rollback()
@@ -275,6 +287,7 @@ def cancel_booking(booking_id):
         booking.status = 'cancelled'
         booking.payment_status = 'refund finished'
         db.session.commit()
+        clear_trek_cache()
 
     except SQLAlchemyError:
         db.session.rollback()
