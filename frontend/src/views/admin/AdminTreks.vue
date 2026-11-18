@@ -470,6 +470,11 @@ onMounted(fetchTreks)
                     @click="backToTreks">
                     ← Back to Treks
             </button>
+            <button v-if="assignmentTrek"
+                    type="button"
+                    class="trek-button" @click="assignmentTrek = null">
+                    ← Back to Treks
+            </button>
         </div>
 
         <p v-if="error" class="feedback error" role="alert">{{ error }}</p>
@@ -478,9 +483,9 @@ onMounted(fetchTreks)
         <section v-if="assignmentTrek" class="assignment-panel">
             <div class="section-heading">
                 <h3>Assign staff for {{ assignmentTrek.trek_name }}</h3>
-                <button type="button" class="trek-button" @click="assignmentTrek = null">
-                    Cancel
-                </button>
+                <!-- <button type="button" >
+                    Back
+                </button> -->
             </div>
 
             <p v-if="loadingAssignments">Loading staff...</p>
@@ -516,19 +521,34 @@ onMounted(fetchTreks)
 
                 <h4>Currently assigned</h4>
                 <p v-if="!assignedStaff.length">No staff assigned to this trek.</p>
-                <ul v-else class="assigned-staff-list">
-                    <li v-for="staff in assignedStaff" :key="staff.assignment_id">
-                        <span>{{ staff.username }} — {{ staff.contact_number }}</span>
-                        <button
-                            type="button"
-                            class="trek-button"
-                            :disabled="cancellingAssignmentId === staff.assignment_id"
-                            @click="cancelStaffAssignment(staff)"
-                        >
-                            {{ cancellingAssignmentId === staff.assignment_id ? 'Removing...' : 'Remove' }}
-                        </button>
-                    </li>
-                </ul>
+                <div v-else class="assigned-staff-list">
+                    <table aria-label="Currently assigned staff">
+                        <thead>
+                            <tr>
+                                <th scope="col">Staff</th>
+                                <th scope="col">Contact</th>
+                                <th scope="col" class="staff-action">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="staff in assignedStaff" :key="staff.assignment_id">
+                                <td class="staff-name">{{ staff.username }}</td>
+                                <td>{{ staff.contact_number || 'Not provided' }}</td>
+                                <td class="staff-action">
+                                    <button
+                                        type="button"
+                                        class="trek-button delete"
+                                        :disabled="cancellingAssignmentId === staff.assignment_id"
+                                        :aria-label="'Remove ' + staff.username + ' from this trek'"
+                                        @click="cancelStaffAssignment(staff)"
+                                    >
+                                        {{ cancellingAssignmentId === staff.assignment_id ? 'Removing...' : 'Remove' }}
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </template>
         </section>
 
@@ -854,8 +874,15 @@ onMounted(fetchTreks)
         .staff-result { display: flex; align-items: flex-start; gap: .75rem; padding: .75rem; border: 1px solid #d6d6d6; border-radius: .5rem; cursor: pointer; }
         .staff-result > span { display: flex; flex-direction: column; gap: .2rem; }
         .staff-results > button { align-self: flex-start; }
-        .assigned-staff-list { list-style: none; margin: 0; padding: 0; }
-        .assigned-staff-list li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 0; border-bottom: 1px solid #f2f2f2; }
+        .assigned-staff-list { overflow-x: auto; border: 1px solid #e5e7eb; border-radius: .5rem; }
+        .assigned-staff-list table { width: 100%; min-width: 28rem; border-collapse: collapse; }
+        .assigned-staff-list th, .assigned-staff-list td { padding: .85rem 1rem; text-align: left; vertical-align: middle; }
+        .assigned-staff-list th { background: #f2f2f2; color: #4b5563; font-size: .85rem; font-weight: 600; }
+        .assigned-staff-list td { border-top: 1px solid #e5e7eb; }
+        .assigned-staff-list tbody tr:hover { background: #fafafa; }
+        .assigned-staff-list .staff-name { font-weight: 500; overflow-wrap: anywhere; }
+        .assigned-staff-list .staff-action { width: 1%; text-align: right; white-space: nowrap; }
+        .assigned-staff-list button:disabled { opacity: .6; cursor: wait; }
         .checkline { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
         .checkline input { width: 1.25rem; height: 1.25rem; accent-color:#175cf1; }
         .checkline label { font-size: large; }

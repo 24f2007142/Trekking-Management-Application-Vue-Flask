@@ -229,7 +229,7 @@ onMounted(loadTreks)
                     <th scope="col">Available Slots</th><th scope="col">Booking</th></tr></thead>
                 <tbody>
                     <tr v-for="trek in filteredTreks" :key="trek.trek_id">
-                        <td><strong>{{ trek.trek_name }}</strong><p>{{ trek.description }}</p></td>
+                        <td><strong>{{ trek.trek_name }}</strong></td>
                         <td>{{ trek.location }}</td><td>{{ trek.difficulty }}</td>
                         <td>{{ trek.duration }} days</td><td>{{ trek.start_date }} – {{ trek.end_date }}</td>
                         <td>₹{{ trek.price.toLocaleString('en-IN') }}</td><td>{{ trek.available_slots }}</td>
