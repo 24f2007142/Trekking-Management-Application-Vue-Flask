@@ -32,7 +32,7 @@ def cache_data(key, data):
 
 
 def clear_trek_cache():
-    # Clear all listing/detail variants after a successful database commit.
+    # Clear all trek cache variants when called after relevant data changes.
     # This also clears other users' listings when available slots change.
     try:
         for key in redis_cache.scan_iter(match=CACHE_PREFIX + '*'):
