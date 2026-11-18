@@ -73,8 +73,9 @@ cd backend
 venv/bin/celery -A auth_app:celery beat --loglevel=info
 ```
 
-Open **http://127.0.0.1:5173/auth.html#/login**. Use this host consistently for
-login cookies. Open Mailpit at **http://127.0.0.1:8025** to view captured emails.
+Open the public landing page at **http://127.0.0.1:5000/** and use its Log In
+or Register links. Direct login is **http://127.0.0.1:5173/auth.html#/login**.
+Use the 127.0.0.1 host consistently for login cookies. Open Mailpit at **http://127.0.0.1:8025** to view captured emails.
 Mailpit receives SMTP on port 1025; it does not deliver to real inboxes.
 
 The worker handles CSV exports and email jobs. Beat schedules daily reminders
@@ -141,8 +142,10 @@ not configured.
 ## Repository and submission
 
 This repository retains the milestone structure: `backend/auth_app.py` and
-`frontend/auth.html` are the application entry points. The app opens at login;
-the older public marketing page is not included in the committed application.
+`frontend/auth.html` are the application entry points. Flask serves the public
+landing page from `backend/templates/landing_page.html`, with local images and
+Vue assets in `backend/static/`. The public statistics endpoint exposes only
+aggregate trek/location counts. The Vue root route opens this landing page.
 A separately prepared submission ZIP is not part of this repository.
 
 Exclude virtual environments, `node_modules`, generated builds, databases,

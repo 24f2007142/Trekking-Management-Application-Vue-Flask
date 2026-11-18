@@ -27,7 +27,13 @@ import UserSettings from '../views/user/UserSettings.vue'
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    { path: '/', redirect: '/login' },
+    {
+      path: '/',
+      beforeEnter() {
+        window.location.replace('http://127.0.0.1:5000/')
+        return false
+      },
+    },
     { path: '/login', component: LoginView },
     { path: '/register', component: RegisterView },
     {

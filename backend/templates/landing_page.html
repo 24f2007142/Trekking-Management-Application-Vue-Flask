@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi-Trek</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+<style>
+
+    .topbar{
+
+        border:0.2rem solid rgb(243, 243, 243);
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 2rem;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        color: black;
+        margin-left: 2rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .logo img {
+        display: block;
+        width: 64px;
+        height: auto;
+        flex-shrink: 0;
+    }
+
+    .logo p {
+        margin-left: 0.5rem;
+    }
+
+    .auth-links a{
+        font-size: 1.5rem;
+        color: black;
+        text-decoration: none;
+        margin-right: 2rem;
+        padding: 0.5rem;
+        align-items: center;
+        border-radius: 0.5rem;
+
+        background-color: rgb(243, 243, 243);
+
+    }
+
+    .grid-container-1{
+
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        align-items:center;
+
+    }
+
+    .grid-1{
+        padding: 2rem;
+        text-align: left;
+        font-size: 1.5rem;
+        color: black;
+        text-decoration: none;
+
+    }
+
+    .grid-1 a{
+        font-size: 1.5rem;
+        color: black;
+        text-decoration: none;
+        margin-top: 1rem;
+        display: inline-block;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        background-color: rgb(243, 243, 243);
+    }
+
+    .grid-1 p{
+        font-size: 1.2rem;
+        color: black;
+        margin-top: 1rem;
+        display: inline-block;
+        padding: 0.5rem;
+    }
+
+    .grid-2 {
+        padding: 1rem;
+        min-width: 0;
+    }
+
+    .grid-2 img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 1rem;
+    }
+
+    .grid-container-2{
+        display:grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 2rem;
+    }
+
+    .grid-3, .grid-4, .grid-5{
+        background-color: rgb(243, 243, 243);
+        padding: 2rem;
+        text-align: center;
+        border-radius: 1rem;
+    }
+
+    .grid-3, .grid-4, .grid-5 p{
+        font-size: 1.2rem;
+        color: black;
+
+    }
+
+    .grid-container-4{
+
+        display:grid;
+        grid-template-columns:1fr;
+    }
+
+    .title-grid{
+        text-align:center;
+        margin: 2rem;
+        font-size: 1.5rem;
+    }
+
+    .partner-grid{
+        display:grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .partner-grid > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        padding: 0.5rem;
+    }
+
+    .partner-grid img {
+        display: block;
+        width: 100%;
+        height: 140px;
+        object-fit: contain;
+    }
+
+    .grid-container-5{
+        display:grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 2rem;
+    }
+
+    .grid-10, .grid-11, .grid-12{
+        border-left: 0.2rem solid rgb(19, 19, 19);
+        padding: 2rem;
+        text-align: left;
+        border-radius: 1rem;
+        box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.05);
+
+    }
+
+    .grid-13{
+        background-color: rgb(243, 243, 243);
+        padding: 2rem;
+        text-align: center;
+        border-radius: 1rem;
+        margin: 2rem;
+    }
+
+    .footer-grid{
+        text-align:center;
+        margin: 2rem;
+        font-size: 1.2rem;
+    }
+
+
+    body { margin: 0; font-family: Arial, sans-serif; line-height: 1.5; }
+    main { max-width: 1200px; margin: auto; }
+    .statistics-heading { text-align: center; margin: 2rem 1rem 0; }
+    .statistics-note { text-align: center; margin: 1rem; }
+    .partner-grid { margin: 2rem; }
+    @media (max-width: 700px) {
+        .grid-container-1, .grid-container-2, .grid-container-5 { grid-template-columns: 1fr; }
+        .partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .topbar { flex-wrap: wrap; gap: 1rem; }
+        .auth-links a { font-size: 1rem; margin-right: 0.5rem; }
+        .logo { margin-left: 0.5rem; }
+    }
+</style>
+</head>
+
+<body>
+
+    <div class="topbar">
+
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Hi-Trek Logo" width="292" height="230">
+            <p>Hi-Trek</p>
+        </div>
+
+        <div class="auth-links">
+            <a href="{{ frontend_url }}/login">Log In</a>
+            <a href="{{ frontend_url }}/register" class="btn-register">Register</a>
+        </div>
+
+    </div>
+
+    <main>
+    <div class="grid-container-1">
+        <div class="grid-1">
+            <h1>Plan. Trek. Explore.</h1>
+            <a href="{{ frontend_url }}/register">Get Started</a>
+            <p>Discover the best trekking routes, plan your adventure, and explore the great outdoors with Hi-Trek.</p>
+        </div>
+        <div class="grid-2">
+            <img src="{{ url_for('static', filename='1.jpeg') }}" alt="Illustrated trekking trail through mountains and pine trees" width="1015" height="1024">
+        </div>
+    </div>
+
+    <section id="trek-statistics" aria-labelledby="statistics-title">
+        <div class="statistics-heading">
+            <h2 id="statistics-title">Trekking at a glance</h2>
+            <p>Explore our trekking activity before you sign up.</p>
+        </div>
+        <div class="grid-container-2" aria-live="polite">
+            <div class="grid-3">
+                <h2 v-text="stats.upcoming_treks"></h2>
+                <noscript>{{ stats.upcoming_treks }}</noscript>
+                <p>Upcoming Treks</p>
+            </div>
+            <div class="grid-4">
+                <h2 v-text="stats.completed_treks"></h2>
+                <noscript>{{ stats.completed_treks }}</noscript>
+                <p>Completed Treks</p>
+            </div>
+            <div class="grid-5">
+                <h2 v-text="stats.destinations"></h2>
+                <noscript>{{ stats.destinations }}</noscript>
+                <p>Trekking Destinations</p>
+            </div>
+        </div>
+        <div class="statistics-note">
+            <p>Destinations count distinct locations of non-cancelled treks. Counts may be cached for up to five minutes.</p>
+        </div>
+    </section>
+
+    <div class="grid-container-4">
+        <div class="title-grid">
+            <h1>Our Proud Partners</h1>
+        </div>
+
+        <div class="partner-grid">
+            <div class="grid-6">
+                <img src="{{ url_for('static', filename='partner1.png') }}" alt="The New India Assurance Company" loading="lazy">
+            </div>
+
+            <div class="grid-7">
+                <img src="{{ url_for('static', filename='partner2.jpg') }}" alt="Indian Mountaineering Foundation" loading="lazy">
+            </div>
+
+            <div class="grid-8">
+                <img src="{{ url_for('static', filename='partner3.svg') }}" alt="Partner 3 logo" loading="lazy">
+            </div>
+
+            <div class="grid-9">
+                <img src="{{ url_for('static', filename='partner4.png') }}" alt="Youth Hostels Association of India" loading="lazy">
+            </div>
+        </div>
+
+        <div class="title-grid">
+                <h1>What Other Trekkers Say</h1>
+            </div>
+
+        <div class="grid-container-5">
+
+            <div class="grid-10">
+                <h2>Akshay</h2>
+                <p> Fantastic trekking experience! The routes were well-planned and the guides were knowledgeable.
+                    Highly recommend Hi-Trek for any adventure enthusiast.</p>
+            </div>
+
+            <div class="grid-11">
+                <h2>Neeraj</h2>
+                <p> Another great experience with Hi-Trek! The equipment was top-notch and the support team was very helpful throughout the journey.</p>
+            </div>
+
+            <div class="grid-12">
+                <h2>Lavanya</h2>
+                <p> Exceptional service and amazing trekking routes. Hi-Trek made our adventure unforgettable!</p>
+            </div>
+        </div>
+
+        <div class="grid-container-6">
+
+            <div class="grid-13">
+                <h2>Connect with Us</h2>
+                <p> +91 9876543210 / +91 9876543211</p>
+                <p>contact@hi-trek.com</p>
+                <p>123 Main Street, Trek point, India</p>
+            </div>
+        </div>
+
+        <div class="footer-grid">
+            <p>&copy; {{ year }} Hi-Trek. All rights reserved.</p>
+        </div>
+
+
+    </div>
+    </main>
+    <script id="initial-statistics" type="application/json">{{ stats | tojson }}</script>
+    <script src="{{ url_for('static', filename='vendor/vue.global.prod.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='landing.js') }}" defer></script>
+</body>
+
+</html>

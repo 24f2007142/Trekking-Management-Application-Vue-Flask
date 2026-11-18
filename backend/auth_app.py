@@ -19,6 +19,7 @@ app.config.update(
     SECRET_KEY=os.environ.get('SECRET_KEY') or secrets.token_hex(32),
     SQLALCHEMY_DATABASE_URI='sqlite:///users.db',
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    FRONTEND_URL='http://127.0.0.1:5173/auth.html#',
     JWT_TOKEN_LOCATION=['cookies'],
     JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=2),
     JWT_COOKIE_CSRF_PROTECT=True,
@@ -211,6 +212,10 @@ app.register_blueprint(staff_bp, url_prefix='/api/staff')
 
 from routes.user import user_bp
 app.register_blueprint(user_bp, url_prefix='/api/user')
+
+
+from routes.public import public_bp
+app.register_blueprint(public_bp)
 
 
 if __name__ == '__main__':
